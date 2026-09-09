@@ -1,0 +1,9 @@
+
+# The key is that Python decorators become almost trivial once you deeply understand functions as 
+  objects + closures + name rebinding + syntactic sugar.
+
+# Explore that chat piined by name Decorators_Indepth on chatgpt
+
+
+
+
