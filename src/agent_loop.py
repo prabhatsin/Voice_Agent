@@ -11,44 +11,98 @@ from google import genai
 from google.genai import types
 from dotenv import load_dotenv
 import os
-from src.tool_schema import get_weather_function
-from src.tools import get_weather
+from src.tool_schema import get_weather_function,fehrenheit_temp
+from src.tools import get_weather,fahrenheit_calculator
+from src.tool_registry import tool_registry
 load_dotenv()
 # api=os.getenv("GEMINI_API_KEY")
 
 # def agent_loop():
 
 client=genai.Client()
-prompt="What's the weather in Delhi?"
+# prompt="Give me the temperature of Nagpur in fahrenheit"
 
-weather_tool=types.Tool(function_declarations=[get_weather_function])
+messages=[
+    {"role":"user",
+      "parts":[
+          {
+              "text":"Give me the temperature of Nagpur in fahrenheit"
+          }
+      ]
+     }
+]
 
-response=client.models.generate_content(
-    model="gemini-3.8-flash",
-    contents=prompt,
-    config=types.GenerateContentConfig(
-        automatic_function_calling=types.AutomaticFunctionCallingConfig(
-            disable=True
-        ),
-        tools=[weather_tool],
-        thinking_config=types.ThinkingConfig(
-            thinking_level='low'
+print(messages)
+while True:
+    weather_tool=types.Tool(function_declarations=[get_weather_function])
+    fahrenheit_tool=types.Tool(function_declarations=[fehrenheit_temp])
+    response=client.models.generate_content(
+        model="gemini-3.8-flash",
+        contents=messages,
+        config=types.GenerateContentConfig(
+            automatic_function_calling=types.AutomaticFunctionCallingConfig(
+                disable=True
+            ),
+            tools=[weather_tool,fahrenheit_tool],
+            thinking_config=types.ThinkingConfig(
+                thinking_level='low'
+            )
         )
     )
-)
+    parts=response.candidates[0].content.parts
+    tool_call=None
+    for part in parts:
+        if part.function_call:
+            tool_call=part.function_call
+            #! This break statement takes out of the above for loop not the main while loop
+            break
+    if tool_call: # check if tool call present in the response
+        print("MODEL RETURNED:.........")
+        #step1:# 1. Append Gemini's model response containing the function call
+        messages.append(response.candidates[0].content)
+        print(response.candidates[0].content)
+        print()
+        print()
+
+        # step2:Execute the actual Python function
+        tool_name=tool_registry[tool_call.name]
+        result=tool_name(**tool_call.args)
+
+
+        # Step3: Append the functions result
+        tool_response={
+            "role":"tool",
+            "parts":[
+                {
+                    "function_response":{
+                        "name":tool_call.name,
+                        "response":{
+                            "result":result
+                        }
+                    }
+                }
+            ]
+         
+        }
+        print("The response to be appended to the model is ",tool_response)
+        messages.append(tool_response)
+
+    else:
+        print("No function call found in the response ")
+        text_response={
+            "role":"model",
+            "parts":[
+                {
+                    "text":response.text
+                }
+            ]
+        }
+        print(text_response)
+        messages.append(text_response)
+        break
 
 
 
-# print(response.function_calls)
-
-part=response.candidates[0].content.parts[0]
-# print(part.function_call)
-print(part.text)
-tool_call=response.candidates[0].content.parts[0].function_call
-
-if tool_call.name=='get_weather':
-    result=get_weather(**tool_call.args)
-    print("The temperature of Delhi is ",result)
 
 
 
@@ -57,17 +111,15 @@ if tool_call.name=='get_weather':
 
 
 
+#? Question: You may wonder: Why is the function response role: "user" instead of "tool"?
 
 
+'''
+Because in Gemini's conversation protocol, the function response is represented as a part of the user-side
+input back to the model. "tool" is your own conceptual label; it isn't the Gemini Content.role you're 
+supposed to send here.
 
-
-
-
-# for chunk in response:
-#     print(chunk)
-#     # print(chunk.text,end="")
-
-
+'''
 
 
 
@@ -104,7 +156,27 @@ LLM response
 
 
 
+#? Agent Loop in short
 
+'''
+while True:
+
+    response = client.models.generate_content(...)
+
+    part = response.candidates[0].content.parts[0]
+
+    if part.function_call:
+        # 1. Identify requested function
+        # 2. Execute it
+        # 3. Give result back to Gemini
+        # 4. Continue loop
+
+    else:
+        # Final answer
+        print(part.text)
+        break
+
+'''
 
 
 
