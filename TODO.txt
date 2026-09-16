@@ -2,8 +2,36 @@
 # The key is that Python decorators become almost trivial once you deeply understand functions as 
   objects + closures + name rebinding + syntactic sugar.
 
-# Explore that chat piined by name Decorators_Indepth on chatgpt
+2.Explore that chat piined by name Decorators_Indepth on chatgpt
 
 
+3.Explore can we create a agent which calls a tool , if tool is not present it creates the tool by itself , 
+(But it may becomes dangerous )
+
+
+4. build an adaptor for the messages / history 
+
+messages=[
+    {"role":"user",
+      "parts":[
+          {
+              "text":"Give me the temperature of Nagpur in fahrenheit"
+          }
+      ]
+     }
+]
+
+
+Build a adaptor which can bypass this fixed format , 
+
+
+5. Explore Structure outputs using Pydantic , we can structure the output as we want  ,
+
+
+6.Send Message (Asynchronous Non-Streaming), Send Message (Asynchronous Streaming)
+
+
+
+7. # Cache aware streaming , 
 
 

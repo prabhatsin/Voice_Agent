@@ -1,2 +1,6 @@
 google-genai
 python-dotenv
+deepgram-sdk
+sounddevice # the microphone library:
+websockets
+

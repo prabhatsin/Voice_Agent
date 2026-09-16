@@ -5,6 +5,10 @@ import websockets
 
 async def handler(websocket):
     print("client_connected")
+    message = await websocket.recv()
+    print("Client:", message)
+
+    await websocket.send("Hello Client")
 
 async def main():
     async with websockets.serve(handler,"localhost",8765): #websockets.serve(handler, host, port, **kwargs)

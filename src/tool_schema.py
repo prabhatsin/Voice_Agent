@@ -17,3 +17,20 @@ get_weather_function={
 
 
 
+fehrenheit_temp={
+    "name":"fahrenheit_calculator",
+    "description":"Returns  temperature in Fahrenheit given temp in degree celsius as input",
+    "parameters":{
+        "type":"object",
+        "properties":{
+            "temperature":{
+                  "type":"integer",
+                   "description":"The temperature in degree celsius."
+            },
+          
+        },
+        "required":["temperature"]
+    }
+}
+
+

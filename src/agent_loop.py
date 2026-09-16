@@ -32,6 +32,8 @@ messages=[
      }
 ]
 
+
+
 print(messages)
 while True:
     weather_tool=types.Tool(function_declarations=[get_weather_function])
