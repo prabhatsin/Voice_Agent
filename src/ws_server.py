@@ -1,15 +1,18 @@
 
-
 import asyncio
 import websockets
+
 
 async def handler(websocket):
     print("client_connected")
 
-    while True:
-        message = await websocket.recv()
+    # while True:
+    #     message = await websocket.recv()
+    async for message in websocket:
         print("Client:", message)
         await websocket.send("Received: "+ message)
+
+
 
 async def main():
     async with websockets.serve(handler,"localhost",8765): #websockets.serve(handler, host, port, **kwargs)
@@ -26,38 +29,110 @@ asyncio.run(main())
 
 
 
+#? Question : Whats this 'websocket' argument in the handler function ?? and how can  it do websocket.send() 
+#? and all this , also can we name it antything random or just websocket ??
+
+
+'''
+# When the WebSocket library calls your 'handler',it automatically passes a WebSocket connection object into it
+# when handler is passed into ' websockets.serve(handler,"localhost",8765)' ,the websockets library creates 
+  a WebSocket connection object and passes that object to your function.
+
+# You start the server, async with websockets.serve(handler, "localhost", 8765):
+
+"Start a WebSocket server, and whenever a client connects, use my handler function."
+
+# As per the naming convention , u can it anything 'websocket' or 'connection' or anything
+
+#! conclusion
+#! websocket is referring to that WebSocket connection object created by the library.
+
+'''
+
+#? Question whats this async for loop , i have used normal for loop
+
+'''
+#!. Normal for
+
+Suppose:
+
+numbers = [10, 20, 30]
+
+for number in numbers:
+    print(number)
+
+Python already has all the values:
+
+numbers
+   ↓
+[10, 20, 30]
+ ↓   ↓   ↓
+10  20  30
+
+So it can immediately do:
+
+get 10 → process
+get 20 → process
+get 30 → process
+
+#!. But imagine the values aren't available yet
+
+Imagine someone says:
+
+"I'll give you a number, but I don't know when the next number will arrive."
+
+For example:
+
+number 1 → now
+number 2 → 2 seconds later
+number 3 → 5 seconds later
+number 4 → 1 second later
+...
+
+You can't use a normal list:
+
+for number in numbers:
+
+because the numbers don't exist yet.
+
+You need to wait asynchronously for each next value.
+
+That's where:
+
+async for
+
+comes in.
+
+#! Mental model
+
+Normal for:
+
+for item in collection:
+
+    "Give me the next item"
+    ↓
+    immediately available
+
+async for:
+
+async for item in async_source:
+
+    "Give me the next item"
+    ↓
+    ⏳ wait asynchronously if necessary
+    ↓
+    item arrives
+    ↓
+    execute body
+
+
+'''
 
 
 
+# async def = "this function, when called, gives you a coroutine object"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# async def = "this function, when called, gives you a coroutine"
-
-#?Question: Why are we using , async with ??? -------------------------------------------------------------
+#?Question: Why are we using , async with , not normal with ??? -------------------------------------------------------------
 
 
 '''
@@ -72,7 +147,6 @@ its setup (__aenter__) and teardown (__aexit__) are coroutines that need awaitin
 
 
 
-
 So the logic chain is actually:
 
 i) websockets.serve() needs to do async work to start/stop → so it's built as an async context manager
@@ -81,6 +155,7 @@ iii) Because async with involves awaiting internally, it can only be used inside
 
 
 '''
+
 
 '''
 #?-------------------------------

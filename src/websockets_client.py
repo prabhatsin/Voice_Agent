@@ -7,10 +7,15 @@ async def main():
     async with websockets.connect("ws://localhost:8765") as websocket:
 
         await websocket.send("Hello Server")
+        print("Server:",await websocket.recv())
 
-        response = await websocket.recv()
+        await websocket.send("How are you")
+        print("Server:",await websocket.recv())
 
-        print("Server:", response)
+        await websocket.send("Goodbye")
+        print("Server:",await websocket.recv())
+
+        
         # print("Connected to server")
 
 asyncio.run(main())
