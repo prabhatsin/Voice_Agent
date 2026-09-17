@@ -2,28 +2,26 @@ import asyncio
 import websockets
 
 
+
+
+
+async def send_message(websocket):
+    while True:
+        message=input("you: ")
+        await websocket.send(message)
+
+
 async def main():
 
     async with websockets.connect("ws://localhost:8765") as websocket:
+        print("connected to server")
 
-        await websocket.send("Hello Server")
-        print("Server:",await websocket.recv())
+        asyncio.create_task(send_message(websocket))
 
-        await websocket.send("How are you")
-        print("Server:",await websocket.recv())
 
-        await websocket.send("Goodbye")
-        print("Server:",await websocket.recv())
-
-        
-        # print("Connected to server")
+        # we want our main() to be alive , because if main() reaches the end , connection closes and program exits
+        # and in this case we want concurrent communication 
+        await asyncio.Future()
 
 asyncio.run(main())
-
-
-
-
-# TOMMOROW:
-# 1. aate hi understand 3 way handshake , \
-# 2. more familiarity with websocket in Deepgram 
 
