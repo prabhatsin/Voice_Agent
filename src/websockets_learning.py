@@ -1,4 +1,27 @@
 
+#? Whats a socket then ?? 
+# Socket = an endpoint through which a program sends and receives network data.
+
+'''
+Your Python program                         Another computer
+      │                                           │
+      │                                           │
+   [Socket] ════════════════════════════════ [Socket]
+'''
+#  A socket is an OS-level communication endpoint associated with things such as:
+# IP address
+# Port
+# Protocol....
+
+
+#? Mistake to think that sockets are  only used in websocket , not http  ,??
+#!Wrong.....
+
+# HTTP uses sockets too. WebSocket uses sockets too.
+
+# A socket isn't necessarily something that disappears when you switch protocols.
+
+
 #? What is websocket ?? 
 
 '''
@@ -7,6 +30,8 @@ client and a server over a single connection. Unlike HTTP, where the client typi
 waits for a response, with WebSocket both sides can send data whenever they need to. It's particularly useful
 for real-time applications such as chat, live notifications, gaming, and streaming audio.
 '''
+
+
  # ? How is it decided who is client and who is server because both can send and receive messages right ??
 
 
@@ -64,25 +89,27 @@ worker, requests are processed sequentially.
 
 # But that's not the same as saying the instance can handle only one client.,The same instance can serve many clients sequentially.
 
+'''
+FastAPI is commonly run with Uvicorn.
+
+You can run:
+
+uvicorn main:app --workers 4
+
+             FastAPI application
+                     │
+       ┌─────────────┼─────────────┐
+       ↓             ↓             ↓
+    Worker 1      Worker 2      Worker 3
+                     ...
+
+                     
+--> Each worker is a separate process.
+
+'''
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#? TO EXPLORE MORE  IN DEPTH OF THIS , READ Must_Read.Docs --------->
 
 
 
@@ -99,7 +126,7 @@ worker, requests are processed sequentially.
 
 Do this:
 
-Level 1 — Basic syntax
+#!Level 1 — Basic syntax
 
 Understand:
 
@@ -109,13 +136,16 @@ recv
 close
 
 
-Level 2 — Streaming
+#!Level 2 — Streaming
 
 Understand:
 
 while True
 async for
-Level 3 — Bidirectional communication
+
+ 
+
+#!Level 3 — Bidirectional communication
 
 Build:
 
@@ -124,7 +154,7 @@ receiver coroutine
 
 running concurrently.
 
-Level 4 — Binary data
+#!Level 4 — Binary data
 
 Send:
 
@@ -132,7 +162,7 @@ bytes
 
 instead of strings.
 
-Level 5 — Real application
+#!Level 5 — Real application
 
 Then replace:
 

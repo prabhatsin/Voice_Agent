@@ -29,6 +29,68 @@ asyncio.run(main())
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#! Out of context , :
+#? Why does python even have GIL , why doesnt it have True multithreading , ?
+
+'''
+1.GIL was a design trade-off in CPython
+
+2.
+WITHOUT GIL
+────────────────────────
+True parallelism ✅
+Much more synchronization
+More complex interpreter
+Potential overhead
+
+3.
+WITHOUT GIL
+────────────────────────
+True parallelism ✅
+Much more synchronization
+More complex interpreter
+Potential overhead
+
+4.So historically, Python chose:(#! Main reason why even GIL exist)
+"Make the interpreter simpler and efficient for the overwhelmingly common single-threaded case, 
+while providing threads mainly for I/O concurrency."
+
+#! READ THE PINNED CHAT Explain GIL Mutex
+'''
+
+
+
+
+
+
+
+
 #? Question : Whats this 'websocket' argument in the handler function ?? and how can  it do websocket.send() 
 #? and all this , also can we name it antything random or just websocket ??
 
